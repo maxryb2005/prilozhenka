@@ -1,0 +1,71 @@
+# Код позволяет пользователю выбрать блюдо из списка и отображает информацию о выбранном блюде.
+import random
+
+# Импортируемые библиотеки
+import sys
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QMessageBox
+from PyQt6.QtGui import QIcon, QColor
+
+# Класс FoodApp наследуется от класса QWidget и представляет собой основное окно приложения.
+class FoodApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Приложение с едой")  # Заголовок приложения
+        self.setFixedSize(400, 300)  # Размеры и положение окна
+        self.setWindowIcon(QIcon("../Images/food.jpeg"))  # Иконка приложения
+
+        # Установка цвета фона
+        self.setStyleSheet("background-color:#bf99d1;")  # Цвет фона
+
+        # Создание вертикального layout
+        self.layout = QVBoxLayout()
+
+        self.label_welcome = QLabel("MENUE/МЕНЮ")
+        self.label_welcome.setStyleSheet("font: bold; font-size: 16pt; color: black;")
+        self.label_welcome.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_welcome.setFixedSize(250, 35)
+
+        # Заголовок
+        self.label_title = QLabel("Выберите блюдо:")
+        self.label_title.setStyleSheet("font-size: 20px; color: black;")  # Установка цвета и размера шрифта
+
+        # Список блюд
+        self.food_list = QListWidget()
+
+        # Добавляем блюда в список
+        dishes = [
+            "Утка по-пекински",
+            "Унаги Маки",
+            "Тяхан с курицей",
+            "Том Ям с морепродуктами",
+            "Пицца барбекю"
+        ]
+
+        for dish in dishes:
+            item = QListWidgetItem(dish)
+            item.setBackground(QColor(160, 160, 164))  # серый цвет кнопок
+            self.food_list.addItem(item)
+
+        self.layout.addWidget(self.label_welcome)
+        self.layout.addWidget(self.label_title)
+        self.layout.addWidget(self.food_list)
+
+        # Подключаем метод при выборе блюда
+        self.food_list.itemClicked.connect(self.show_food_info)
+
+        self.setLayout(self.layout)
+    # Метод отображает информацию о выбранном блюде при клике.
+    def show_food_info(self, item):
+        dish_name = item.text()
+        # Здесь можно добавить логику для получения информации о блюде
+        QMessageBox.information(self, "Информация о блюде", f"Заказ: {dish_name}, принят. Время ожидания {random.randint(10,30)} минут")
+
+
+# Запуск приложения
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    food_window = FoodApp()
+    food_window.show()
+    sys.exit(app.exec())
